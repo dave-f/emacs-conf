@@ -1,0 +1,7 @@
+# Whitelist: ignore everything in .emacs.d except the files named below.
+# Keeps packages, history, caches and the private local.el / custom.el
+# out of the repo without having to list them.
+/*
+!/.gitignore
+!/init.el
+!/README.md
