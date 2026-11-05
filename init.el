@@ -154,6 +154,10 @@
   ;; Media symbols (play, pause, stop: U+23F4..U+23FA) aren't emoji and no
   ;; other font has them; Claude Code shows "auto mode on" with two plays.
   (set-fontset-font t '(#x23F4 . #x23FA) (font-spec :family "Segoe UI Symbol")
+                    nil 'prepend)
+  ;; Misc Mathematical Symbols-B (U+2980..U+29FF) isn't in FiraCode either;
+  ;; Claude Code's footer marks an open artifact with U+29C9 (two joined squares).
+  (set-fontset-font t '(#x2980 . #x29FF) (font-spec :family "Segoe UI Symbol")
                     nil 'prepend))
 
 ;;; ==================================================================
