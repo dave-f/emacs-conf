@@ -461,11 +461,13 @@ eshell, with a number N switch to *eshell*<N>."
   :custom
   (grep-command "rg -nH --no-heading -e "))
 
-;; Don't error if a server is already running in another Emacs.
+;; Don't error if a server is already running in another Emacs.  Only a
+;; definite `t' means that: after a reboot the stale server file makes
+;; `server-running-p' return `:other', and skipping then left no server.
 (use-package server
   :ensure nil
   :config
-  (unless (server-running-p)
+  (unless (eq (server-running-p) t)
     (server-start)))
 
 ;;; ==================================================================
