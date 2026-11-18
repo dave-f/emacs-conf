@@ -27,6 +27,19 @@
   ;; Lets ~/d/my-p expand to ~/Dev/my-project, and keeps TRAMP paths working.
   (completion-category-overrides '((file (styles partial-completion)))))
 
+;; Popup completion at point, in code buffers only; other buffers keep
+;; completion-preview's inline hint (see the emacs block).  Pops up after
+;; 2 characters.  TAB/RET insert, M-n/M-p or arrows move, C-g closes.
+(use-package corfu
+  :hook (prog-mode . corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.2)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
+  :config
+  (corfu-popupinfo-mode 1))         ; docs box beside the popup
+
 ;; Persist minibuffer history, which vertico uses to rank candidates.
 (use-package savehist
   :ensure nil
@@ -98,6 +111,13 @@
 ;;; each loads when a matching file is opened.
 ;;; ==================================================================
 
+(defun my-go-format-on-save ()
+  "Run gofmt (via gopls) before each save of this buffer."
+  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
+
+(use-package go-mode
+  :hook ((go-mode . eglot-ensure)            ; start gopls
+         (go-mode . my-go-format-on-save)))
 (use-package lua-mode :defer t)
 (use-package markdown-mode :defer t)
 
@@ -412,6 +432,12 @@ eshell, with a number N switch to *eshell*<N>."
   (auto-save-default nil)
   (tab-width 4)
   (indent-tabs-mode nil)
+  ;; Emacs's default exclusions, plus prog-mode, where corfu takes over.
+  (global-completion-preview-modes
+   '((not prog-mode archive-mode calc-mode compilation-mode diff-mode
+          dired-mode image-mode minibuffer-mode minibuffer-inactive-mode
+          org-agenda-mode special-mode wdired-mode)
+     t))
   :config
   ;; which-key and completion-preview are built in from Emacs 30.
   (which-key-mode 1)
